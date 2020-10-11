@@ -1,4 +1,4 @@
-# BINGO API version 1.0.3
+# BINGO API version 1.0.4
 ### by Siddhartha Chatterjee
 
 ## API URL:
