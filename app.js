@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "public/index.html")
+    res.send("BINGO API by Siddhartha Chatterjee")
 })
 
 const server = http.createServer(app);
