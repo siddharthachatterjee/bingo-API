@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 
 app.get("/", (req, res) => {
-    res.send("This is the Bingo API!")
+    res.sendFile(__dirname + "public/index.html")
 })
 
 const server = http.createServer(app);
