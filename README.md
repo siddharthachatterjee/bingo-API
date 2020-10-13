@@ -21,6 +21,16 @@ sends a chat message
 ### `put /buy/:key?playerid=...`
 buys a ticket
 
-## Socket.io events:
-### `game${key}-updated`
-emits when a game with a specific key is updated.
+## Socket.io:
+
+``` js
+const socket = require("socket.io-client" /* npm install socket.io-client */)("http://bingo-api-env.eba-zpgsctry.us-west-1.elasticbeanstalk.com/")
+
+const gameRoom = // whatever the game room is
+
+socket.on(`game${gameRoom}-updated`, (game /* This is the updated game object */) => {
+    /* do something */
+})
+
+```
+

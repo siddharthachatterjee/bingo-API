@@ -16,7 +16,7 @@ const server = http.createServer(app);
 server.listen(process.env.PORT || 8080);
 const socketIO = require("socket.io")(server);
 
-const emitUpdate = room => socketIO.emit(`game${room}-updated`);
+const emitUpdate = room => socketIO.emit(`game${room}-updated`, games[room]);
 
 const TICKET_COST = 2, STARTING_MONEY = 5;
 
