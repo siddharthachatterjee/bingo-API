@@ -103,6 +103,8 @@ class Game {
     }
 }
 
+
+
 app.get("/games", (req, res) => {
     res.send(JSON.stringify(games))
 });
