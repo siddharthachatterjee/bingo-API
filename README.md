@@ -21,4 +21,5 @@ sends a chat message
 buys a ticket
 
 ## Socket.io events:
-game${key}-updated
+### `game${key}-updated`
+emits when a game with a specific key is updated.
