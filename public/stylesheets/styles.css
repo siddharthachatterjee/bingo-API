@@ -1,0 +1,6 @@
+.ticket {
+    display: inline-grid;
+    grid-template-columns: repeat(9, 25px);
+    grid-template-rows: repeat(3, 25px);
+}
+
