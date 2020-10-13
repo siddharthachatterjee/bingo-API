@@ -1,6 +1,7 @@
 # BINGO API version 1.0.5
 ### by Siddhartha Chatterjee
 
+This project serves as an API for my bingo game.
 ## API URL:
 [http://bingo-api-env.eba-zpgsctry.us-west-1.elasticbeanstalk.com/](http://bingo-api-env.eba-zpgsctry.us-west-1.elasticbeanstalk.com/)
 
