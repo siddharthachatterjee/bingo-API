@@ -11,7 +11,7 @@ returns list of all games
 returns the game with the specified key param
 ### `get /games/:key/:prop`
 gets a specific property of a specific game
-## `post /new?host=...&hostid=...`
+### `post /new?host=...&hostid=...`
 creates a new game
 ### `put /join/:key?name=...&id=...`
 admits the player into the game
