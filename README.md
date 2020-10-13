@@ -9,11 +9,16 @@
 returns list of all games
 ### get /games/:key
 returns the game with the specified key param
-### post /join/:key?name=...&id=...
+### get /games/:key/:prop
+gets a specific property of a specific game
+## post /new?host=...&hostid=...
+creates a new game
+### put /join/:key?name=...&id=...
 admits the player into the game
-### post /chat/:key?from=...&body=...
+### put /chat/:key?from=...&body=...
 sends a chat message
-
+### put /buy/:key?playerid=...
+buys a ticket
 
 ## Socket.io events:
 game${key}-updated
