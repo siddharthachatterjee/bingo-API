@@ -16,17 +16,12 @@ const server = http.createServer(app);
 server.listen(process.env.PORT || 8000);
 const socketIO = require("socket.io")(server);
 
-
-setInterval(() => {
-    socketIO.emit("something", 3000)
-}, 1000)
-
 const TICKET_COST = 2, STARTING_MONEY = 5;
 
 const games = {};
 
 const emitUpdate = room => socketIO.emit(`game${room}-updated`, games[room]);
-
+    
 function generateTicket() {
     const ticket = Array(3).fill(null).map(() => Array(9).fill(null));
     const availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
@@ -84,10 +79,7 @@ class Game {
     }
     join(playername, playerid) {
         this.players.push(new Player(playername, playerid));
-        setTimeout(() => {
-            socketIO.emit(`game${this.key}-updated`, this);
-            
-        }, 1000)
+        emitUpdate();
         if (this.players.length == 4 && this.availableNumbers.length == 90) {
             setInterval(() => {
                 this.callNumber();
@@ -130,10 +122,6 @@ app.get("/games/:key/:prop", (req, res) => {
 app.post("/new", (req, res) => {
     const game = new Game(req.query.host, req.query.hostid);
     games[game.key] = game;
-    // setInterval(() => {
-
-    //     socketIO.emit(`game${game.key}-updated`, game);
-    // }, 1000)
     res.send(JSON.stringify(game))
 })
 
