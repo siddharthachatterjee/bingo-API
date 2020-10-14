@@ -133,7 +133,7 @@ app.post("/new", (req, res) => {
 
 app.put("/join/:key", (req, res) => {
     games[req.params.key].players.push(req.query);
-    socketIO.emit(`game${req.params.key}-updated`, games[req.params.room])
+    socketIO.emit(`game${req.params.key}-updated`, games[req.params.key])
 })
 
 app.put("/chat/:key", (req, res) => {
