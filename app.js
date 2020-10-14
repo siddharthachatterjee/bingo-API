@@ -84,7 +84,10 @@ class Game {
     }
     join(playername, playerid) {
         this.players.push(new Player(playername, playerid));
-        socketIO.emit(`game${this.key}-updated`, this);
+        setTimeout(() => {
+            socketIO.emit(`game${this.key}-updated`, this);
+            
+        }, 1000)
         if (this.players.length == 4 && this.availableNumbers.length == 90) {
             setInterval(() => {
                 this.callNumber();
