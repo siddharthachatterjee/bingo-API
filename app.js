@@ -129,7 +129,11 @@ app.post("/new", (req, res) => {
 })
 
 app.put("/join/:key", (req, res) => {
-    games[req.params.key].join(req.query.name, req.query.id);
+    if (!(req.params.key in games)) {
+        res.status(404).send("ERROR: there is no existing game with the key you entered")
+    } else {
+        games[req.params.key].join(req.query.name, req.query.id);
+    }
 })
 
 app.put("/start/:key", (req, res) => {
