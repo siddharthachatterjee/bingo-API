@@ -78,7 +78,7 @@ class Game {
     constructor(host, hostid) {
         this.key = generateKey();
         this.host = host;
-        emitUpdate(this.key);
+      
         this.join(host, hostid);
 
     }
@@ -127,6 +127,7 @@ app.get("/games/:key/:prop", (req, res) => {
 app.post("/new", (req, res) => {
     const game = new Game(req.query.host, req.query.hostid);
     games[game.key] = game;
+    emitUpdate(game.key);
     res.send(JSON.stringify(game))
 })
 
