@@ -67,6 +67,7 @@ class Player {
 class Game {
     key;
     players = [];
+    started = false;
     availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
     host;
     chat = [];
@@ -80,7 +81,9 @@ class Game {
     join(playername, playerid) {
         this.players.push(new Player(playername, playerid));
         emitUpdate();
-        if (this.players.length == 4 && this.availableNumbers.length == 90) {
+    }
+    start() {
+        if (!this.started) {
             setInterval(() => {
                 this.callNumber();
             }, 3000)
@@ -126,8 +129,11 @@ app.post("/new", (req, res) => {
 })
 
 app.put("/join/:key", (req, res) => {
-    games[req.params.key].players.push(req.query);
-    socketIO.emit(`game${req.params.key}-updated`, games[req.params.key])
+    games[req.params.key].join(req.query.name, req.query.id);
+})
+
+app.put("/start/:key", (req, res) => {
+    games[req.params.key].start();
 })
 
 app.put("/chat/:key", (req, res) => {
