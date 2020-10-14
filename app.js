@@ -127,7 +127,7 @@ app.get("/games/:key/:prop", (req, res) => {
 app.post("/new", (req, res) => {
     const game = new Game(req.query.host, req.query.hostid);
     games[game.key] = game;
-    emitUpdate(game.key);
+    socketIO.emit(`game${game.key}-updated`, game);
     res.send(JSON.stringify(game))
 })
 
