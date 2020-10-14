@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
 
 
 const server = http.createServer(app);
-server.listen(process.env.PORT || 8080);
+server.listen(process.env.PORT || 8000);
 const socketIO = require("socket.io")(server);
 
 
@@ -122,6 +122,7 @@ app.get("/games/:key/:prop", (req, res) => {
 app.post("/new", (req, res) => {
     let game = new Game(req.query.host, req.query.hostid);
     games[game.key.toString()] = game;
+    res.send(JSON.stringify(game))
 })
 
 app.put("/join/:key", (req, res) => {
