@@ -16,6 +16,11 @@ const server = http.createServer(app);
 server.listen(process.env.PORT || 8000);
 const socketIO = require("socket.io")(server);
 
+
+setInterval(() => {
+    socketIO.emit("something", 3000)
+}, 1000)
+
 const TICKET_COST = 2, STARTING_MONEY = 5;
 
 const games = {};
