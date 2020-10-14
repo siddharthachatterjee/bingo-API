@@ -24,7 +24,8 @@ buys a ticket
 ## Socket.io:
 
 ``` js
-const socket = require("socket.io-client" /* npm install socket.io-client */)("ws://bingo-api-env.eba-zpgsctry.us-west-1.elasticbeanstalk.com/")
+const API_URL = "http://bingo-api-env.eba-zpgsctry.us-west-1.elasticbeanstalk.com/";
+const socket = require("socket.io-client" /* npm install socket.io-client */)(`ws://${API_URL.split("//")[1]}`)
 
 const gameRoom = // whatever the game room is
 
