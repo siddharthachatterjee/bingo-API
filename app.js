@@ -16,11 +16,6 @@ const server = http.createServer(app);
 server.listen(process.env.PORT || 8000);
 const socketIO = require("socket.io")(server);
 
-
-setInterval(() => {
-    socketIO.emit("something", 3000)
-}, 1000)
-
 const TICKET_COST = 2, STARTING_MONEY = 5;
 
 const games = {};
@@ -78,12 +73,13 @@ class Game {
     constructor(host, hostid) {
         this.key = generateKey();
         this.host = host;
+        emitUpdate(this.key);
         this.join(host, hostid);
 
     }
     join(playername, playerid) {
         this.players.push(new Player(playername, playerid));
-        emitUpdate(this.key.toString());
+        emitUpdate(this.key);
         if (this.players.length == 4 && this.availableNumbers.length == 90) {
             setInterval(() => {
                 this.callNumber();
