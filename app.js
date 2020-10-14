@@ -84,7 +84,7 @@ class Game {
     }
     join(playername, playerid) {
         this.players.push(new Player(playername, playerid));
-        emitUpdate(this.key);
+        socketIO.emit(`game${this.key}-updated`, this);
         if (this.players.length == 4 && this.availableNumbers.length == 90) {
             setInterval(() => {
                 this.callNumber();
@@ -127,10 +127,10 @@ app.get("/games/:key/:prop", (req, res) => {
 app.post("/new", (req, res) => {
     const game = new Game(req.query.host, req.query.hostid);
     games[game.key] = game;
-    setInterval(() => {
+    // setInterval(() => {
 
-        socketIO.emit(`game${game.key}-updated`, game);
-    }, 1000)
+    //     socketIO.emit(`game${game.key}-updated`, game);
+    // }, 1000)
     res.send(JSON.stringify(game))
 })
 
