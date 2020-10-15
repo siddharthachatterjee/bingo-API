@@ -133,6 +133,7 @@ app.put("/join/:key", (req, res) => {
         res.status(404).send("ERROR: there is no existing game with the key you entered")
     } else {
         games[req.params.key].join(req.query.name, req.query.id);
+        res.send("");
     }
 })
 
