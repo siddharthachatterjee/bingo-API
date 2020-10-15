@@ -149,7 +149,7 @@ app.put("/chat/:key", (req, res) => {
 
 app.put("/buy/:key", (req, res) => {
     games[req.params.key].players = games[req.params.key].map(player => {
-        if (player.id == req.params.playerid) {
+        if (player.id == req.query.playerid) {
             player.buyTicket();
             return player;
         }
