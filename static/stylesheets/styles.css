@@ -15,10 +15,11 @@
  * from Siddhartha Chatterjee.
  */
 .ticket {
-    display: inline-grid;
+    display: grid;
     grid-template-columns: repeat(9, 25px);
     grid-template-rows: repeat(3, 25px);
     border-radius: 5px;
+    margin: 10px;
     overflow: hidden;
 }
 

@@ -27,9 +27,10 @@ function generateTicket() {
     const availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
     for (let i = 0; i < 3; ++i) {
         for (let j = 0; j < 5; ++j) {
+            let randi;
             do {
-                var randi = Math.floor(Math.random() * availableNumbers.length);
-            } while (ticket[i].some(num => Math.floor(num / 10) == Math.floor(availableNumbers[randi] / 10)))
+                randi = Math.floor(Math.random() * availableNumbers.length);
+            } while (randi && ticket[i].some(num => num && Math.floor(num.value / 10) == Math.floor(availableNumbers[randi] / 10)))
             ticket[i][Math.floor(availableNumbers[randi] / 10)] = {
                 value: availableNumbers[randi],
                 covered: false
@@ -70,11 +71,12 @@ class Game {
     started = false;
     availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
     host;
+    hostid;
     chat = [];
     constructor(host, hostid) {
         this.key = generateKey();
         this.host = host;
-      
+        this.hostid = hostid;
         this.join(host, hostid);
 
     }
@@ -148,11 +150,10 @@ app.put("/chat/:key", (req, res) => {
 });
 
 app.put("/buy/:key", (req, res) => {
-    games[req.params.key].players = games[req.params.key].map(player => {
-        if (player.id == req.query.playerid) {
-            player.buyTicket();
-            return player;
+    for (let i = 0; i < games[req.params.key].players.length; i++) {
+        if (games[req.params.key].players[i].id == req.query.playerid) {
+            games[req.params.key].players[i].buyTicket();
         }
-        return player;
-    })
+    }
+    emitUpdate(req.params.key)
 })
