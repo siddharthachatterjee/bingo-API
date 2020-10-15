@@ -144,7 +144,7 @@ app.put("/start/:key", (req, res) => {
 })
 
 app.put("/chat/:key", (req, res) => {
-    games[req.params.key].push(req.query)
+    games[req.params.key].chat.push(req.query)
 });
 
 app.put("/buy/:key", (req, res) => {
