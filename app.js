@@ -84,6 +84,8 @@ class Game {
     }
     start() {
         if (!this.started) {
+            this.started = true;
+            emitUpdate(this.key)
             setInterval(() => {
                 this.callNumber();
             }, 3000)

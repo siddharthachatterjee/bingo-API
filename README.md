@@ -16,6 +16,8 @@ gets a specific property of a specific game
 creates a new game
 ### `put /join/:key?name=...&id=...`
 admits the player into the game
+### `put /start/:key`
+starts game
 ### `put /chat/:key?from=...&body=...`
 sends a chat message
 ### `put /buy/:key?playerid=...`
