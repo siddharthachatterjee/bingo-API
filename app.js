@@ -80,7 +80,7 @@ class Game {
     }
     join(playername, playerid) {
         this.players.push(new Player(playername, playerid));
-        emitUpdate();
+        emitUpdate(this.key);
     }
     start() {
         if (!this.started) {
