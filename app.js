@@ -53,12 +53,14 @@ class Player {
     money = STARTING_MONEY;
     name;
     id;
-    constructor(name, id) {
+    game;
+    constructor(name, id, game) {
         this.id = id;
         this.name = name;
+        this.game = game;
     }
     buyTicket() {
-        if (this.money > TICKET_COST) {
+        if (this.money > TICKET_COST && !games[this.game].started) {
             this.tickets.push(generateTicket());
             this.money -= TICKET_COST;
         }
@@ -69,6 +71,7 @@ class Game {
     key;
     players = [];
     started = false;
+    ended = false;
     availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
     host;
     hostid;
@@ -78,11 +81,11 @@ class Game {
         this.key = generateKey();
         this.host = host;
         this.hostid = hostid;
-        this.join(host, hostid);
+        this.join(host, hostid, this.key);
 
     }
     join(playername, playerid) {
-        this.players.push(new Player(playername, playerid));
+        this.players.push(new Player(playername, playerid, this.key));
         emitUpdate(this.key);
     }
     start() {
@@ -93,8 +96,11 @@ class Game {
                 this.callNumber();
                 if (this.availableNumbers.length <= 0) {
                     clearInterval(numberCall);
+                    this.ended = true;
+                    emitUpdate(this.key);
+                    delete games[this.key];
                 }
-            }, 500)
+            }, 5000)
         }
     }
     callNumber() {
@@ -102,13 +108,13 @@ class Game {
         let randnum = this.availableNumbers[randi];
         this.lastNumberCalled = randnum;
         this.availableNumbers.splice(randi, 1);
-        this.players.forEach(player => {
-            player.tickets = player.tickets.map(ticket => (
-                ticket.map(row => row.map(square => {
+        this.players.forEach((player, i) => {
+            this.players[i].tickets.forEach((ticket, j) => (
+                ticket.forEach((row, k) => row.forEach((square, l) => {
                     if (square && square.value == randnum) {
-                        return {value: randnum, covered: true}
+                       this.players[i].tickets[j][k][l].covered = true;
                     }
-                    return square;
+                   // return square;
                 }))
             ))
         })
@@ -156,7 +162,7 @@ app.put("/chat/:key", (req, res) => {
 
 app.put("/buy/:key", (req, res) => {
     for (let i = 0; i < games[req.params.key].players.length; i++) {
-        if (games[req.params.key].players[i].id == req.query.playerid) {
+        if (games[req.params.key].players[i].id === req.query.playerid) {
             games[req.params.key].players[i].buyTicket();
         }
     }
