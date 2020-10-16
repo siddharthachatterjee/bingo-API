@@ -73,6 +73,7 @@ class Game {
     host;
     hostid;
     chat = [];
+    lastNumberCalled = null;
     constructor(host, hostid) {
         this.key = generateKey();
         this.host = host;
@@ -88,14 +89,18 @@ class Game {
         if (!this.started) {
             this.started = true;
             emitUpdate(this.key)
-            setInterval(() => {
+            let numberCall = setInterval(() => {
                 this.callNumber();
-            }, 3000)
+                if (this.availableNumbers.length <= 0) {
+                    clearInterval(numberCall);
+                }
+            }, 500)
         }
     }
     callNumber() {
         let randi = Math.floor(Math.random() * this.availableNumbers.length);
         let randnum = this.availableNumbers[randi];
+        this.lastNumberCalled = randnum;
         this.availableNumbers.splice(randi, 1);
         this.players.forEach(player => {
             player.tickets = player.tickets.map(ticket => (
