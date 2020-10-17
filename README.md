@@ -22,6 +22,8 @@ starts game
 sends a chat message
 ### `put /buy/:key?playerid=...`
 buys a ticket
+### `put /call-bingo/:key?playerid=...`
+calls bingo, returns result of the call or blank if call was incorrect
 
 ## Socket.io:
 

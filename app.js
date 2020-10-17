@@ -64,11 +64,38 @@ class Player {
             this.tickets.push(generateTicket());
             this.money -= TICKET_COST;
         }
+    };
+    callBingo() {
+        // test full house
+        let type = ""
+        this.tickets.forEach(ticket => {
+            if (ticket.every(row => row.every(square => !square || square.covered))) {
+                let increase = Math.max(0, 10 - (games[this.game].fullHouses)*2);
+                this.money += increase;
+                games[this.game].fullHouses++;
+                socketIO.emit(`full-house-${this.key}`, {...this, increase});
+                type =  "FULL_HOUSE";
+            }
+            
+        })
+        // test 5 in row
+        this.tickets.forEach(ticket => {
+            if (ticket.some(row => row.every(square => !square || square.covered))) {
+                let increase = Math.max(0, 5 - (games[this.game].fiveInRow));
+                this.money += increase;
+                games[this.game].fiveInRow++;
+                socketIO.emit(`five-in-row-${this.key}`, {...this, increase});
+                type = "FIVE_IN_ROW";
+            }
+        })
+        return type;
     }
 }
 
 class Game {
     key;
+    fullHouses = 0;
+    fiveInRow = 0;
     players = [];
     started = false;
     ended = false;
@@ -100,7 +127,7 @@ class Game {
                     emitUpdate(this.key);
                     delete games[this.key];
                 }
-            }, 5000)
+            }, 1000)
         }
     }
     callNumber() {
@@ -164,7 +191,19 @@ app.put("/buy/:key", (req, res) => {
     for (let i = 0; i < games[req.params.key].players.length; i++) {
         if (games[req.params.key].players[i].id === req.query.playerid) {
             games[req.params.key].players[i].buyTicket();
+            break;
         }
     }
     emitUpdate(req.params.key)
+});
+
+app.put("/call-bingo/:key", (req, res) => {
+    for (let i = 0; i < games[req.params.key].players.length; i++) {
+        if (games[req.params.key].players[i].id === req.query.playerid) {
+            res.send(games[req.params.key].players[i].callBingo());
+            break;
+        }
+    }
+    emitUpdate(this.key);
+    
 })
