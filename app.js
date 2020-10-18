@@ -13,8 +13,9 @@ app.get("/", (req, res) => {
 
 
 const server = http.createServer(app);
-server.listen(process.env.PORT || 8000);
-const socketIO = require("socket.io")(server);
+const socketIO = require("socket.io").listen(server);
+
+server.listen(process.env.PORT || 8080);
 
 const TICKET_COST = 2, STARTING_MONEY = 5;
 
@@ -73,18 +74,19 @@ class Player {
                 let increase = Math.max(0, 10 - (games[this.game].fullHouses)*2);
                 this.money += increase;
                 games[this.game].fullHouses++;
-                socketIO.emit(`full-house-${this.key}`, {...this, increase});
+                socketIO.emit(`full-house-${this.game}`, {...this, increase});
                 type =  "FULL_HOUSE";
             }
             
         })
+        if (type.length) return type;
         // test 5 in row
         this.tickets.forEach(ticket => {
             if (ticket.some(row => row.every(square => !square || square.covered))) {
                 let increase = Math.max(0, 5 - (games[this.game].fiveInRow));
                 this.money += increase;
                 games[this.game].fiveInRow++;
-                socketIO.emit(`five-in-row-${this.key}`, {...this, increase});
+                socketIO.emit(`five-in-row-${this.game}`, {...this, increase});
                 type = "FIVE_IN_ROW";
             }
         })
@@ -99,15 +101,18 @@ class Game {
     players = [];
     started = false;
     ended = false;
+    enableAutoMark = true;
     availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
     host;
     hostid;
     chat = [];
+    timeTillNextCall = 0;
     lastNumberCalled = null;
-    constructor(host, hostid) {
+    constructor(host, hostid, enableAutoMark = true) {
         this.key = generateKey();
         this.host = host;
         this.hostid = hostid;
+        this.enableAutoMark = enableAutoMark;
         this.join(host, hostid, this.key);
 
     }
@@ -118,16 +123,23 @@ class Game {
     start() {
         if (!this.started) {
             this.started = true;
+            this.timeTillNextCall = 5;
             emitUpdate(this.key)
+            let second = setInterval(() => {
+                this.timeTillNextCall--;
+                if (this.timeTillNextCall < 0) this.timeTillNextCall = 5;
+            }, 1000)
             let numberCall = setInterval(() => {
                 this.callNumber();
                 if (this.availableNumbers.length <= 0) {
                     clearInterval(numberCall);
+                    clearInterval(second);
                     this.ended = true;
                     emitUpdate(this.key);
                     delete games[this.key];
                 }
-            }, 1000)
+            }, 5000)
+            
         }
     }
     callNumber() {
@@ -135,17 +147,19 @@ class Game {
         let randnum = this.availableNumbers[randi];
         this.lastNumberCalled = randnum;
         this.availableNumbers.splice(randi, 1);
-        this.players.forEach((player, i) => {
-            this.players[i].tickets.forEach((ticket, j) => (
-                ticket.forEach((row, k) => row.forEach((square, l) => {
-                    if (square && square.value == randnum) {
-                       this.players[i].tickets[j][k][l].covered = true;
-                    }
-                   // return square;
-                }))
-            ))
-        })
-        emitUpdate(this.key);
+        if (this.enableAutoMark) {
+            this.players.forEach((player, i) => {
+                this.players[i].tickets.forEach((ticket, j) => (
+                    ticket.forEach((row, k) => row.forEach((square, l) => {
+                        if (square && square.value == randnum) {
+                        this.players[i].tickets[j][k][l].covered = true;
+                        }
+                    // return square;
+                    }))
+                ))
+            })
+        }
+       // emitUpdate(this.key);
     }
 }
 
@@ -165,7 +179,7 @@ app.get("/games/:key/:prop", (req, res) => {
 })
 
 app.post("/new", (req, res) => {
-    const game = new Game(req.query.host, req.query.hostid);
+    const game = new Game(req.query.host, req.query.hostid, req.query.enableAutoMark);
     games[game.key] = game;
     res.send(JSON.stringify(game))
 })
