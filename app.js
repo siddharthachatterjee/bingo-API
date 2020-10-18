@@ -87,7 +87,7 @@ class Player {
         // test 5 in row
         this.tickets.forEach(ticket => {
             ticket.forEach(row => {
-                if (row.every(square => !square || square.covered) && !this.coveredRows.some(r => r.join(" ") === row.join(" "))) {
+                if (row.every(square => !square || square.covered) && this.coveredRows.some(r => r.join(" ") !== row.join(" "))) {
                     let increase = Math.max(0, 5 - (games[this.game].fiveInRow));
                     this.money += increase;
                     this.coveredRows.push(fullRow);
