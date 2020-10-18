@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
+const e = require("express");
 
 
 
@@ -201,10 +202,12 @@ app.put("/join/:key", (req, res) => {
 
 app.put("/start/:key", (req, res) => {
     games[req.params.key].start();
+    res.send("Started!")
 })
 
 app.put("/chat/:key", (req, res) => {
-    games[req.params.key].chat.push(req.query)
+    games[req.params.key].chat.push(req.query);
+    emitUpdate(req.params.key);
 });
 
 app.put("/buy/:key", (req, res) => {
