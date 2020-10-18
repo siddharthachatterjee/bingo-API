@@ -54,6 +54,8 @@ class Player {
     money = STARTING_MONEY;
     name;
     id;
+    coveredRows = [];
+    fullHouse = false;
     game;
     constructor(name, id, game) {
         this.id = id;
@@ -74,6 +76,7 @@ class Player {
                 let increase = Math.max(0, 10 - (games[this.game].fullHouses)*2);
                 this.money += increase;
                 games[this.game].fullHouses++;
+                this.fullHouse = true;
                 socketIO.emit(`full-house-${this.game}`, {...this, increase});
                 type =  "FULL_HOUSE";
             }
@@ -82,13 +85,16 @@ class Player {
         if (type.length) return type;
         // test 5 in row
         this.tickets.forEach(ticket => {
-            if (ticket.some(row => row.every(square => !square || square.covered))) {
-                let increase = Math.max(0, 5 - (games[this.game].fiveInRow));
-                this.money += increase;
-                games[this.game].fiveInRow++;
-                socketIO.emit(`five-in-row-${this.game}`, {...this, increase});
-                type = "FIVE_IN_ROW";
-            }
+            ticket.forEach(row => {
+                if (row.every(square => !square || square.covered) && !this.coveredRows.some(r => r.join(" ") === row.join(" "))) {
+                    let increase = Math.max(0, 5 - (games[this.game].fiveInRow));
+                    this.money += increase;
+                    this.coveredRows.push(fullRow);
+                    games[this.game].fiveInRow++;
+                    socketIO.emit(`five-in-row-${this.game}`, {...this, increase});
+                    type = "FIVE_IN_ROW";
+                }
+            })
         })
         return type;
     }
