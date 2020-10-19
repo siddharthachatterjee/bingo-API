@@ -33,8 +33,21 @@ const socket = require("socket.io-client" /* npm install socket.io-client */)(`w
 
 const gameRoom = // whatever the game room is
 
+// when game is updated
 socket.on(`game${gameRoom}-updated`, (game /* This is the updated game object */) => {
     /* do something */
+})
+
+socket.on(`full-house-${gameRoom}`, (player /* player who scored full house */) => {
+
+})
+
+socket.on(`five-in-row-${gameRoom}`, (player) => {
+
+})
+
+socket.on(`false-bingo-${gameRoom}`, (player) => {
+    
 })
 
 ```

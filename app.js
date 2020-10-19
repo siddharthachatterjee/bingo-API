@@ -97,6 +97,10 @@ class Player {
                 }
             })
         })
+        if (!type.length) {
+            this.money -= 2;
+            socketIO.emit(`false-bingo-${this.game}`, this);
+        }
         return type;
     }
 }
