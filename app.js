@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
-const express = require("express");
 
 const app = express();
 app.use(cors());
@@ -12,7 +11,7 @@ app.get("/", (req, res) => {
 
 
 const server = http.createServer(app);
-const socketIO = require("socket.io")(server);
+const socketIO = require("socket.io").listen(server);
 
 server.listen(process.env.PORT || 8080);
 
