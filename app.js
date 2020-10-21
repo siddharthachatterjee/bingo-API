@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
 
 
 const server = http.createServer(app);
-const socketIO = require("socket.io").listen(server);
+const socketIO = require("socket.io")(server);
 
 server.listen(process.env.PORT || 8080);
 
