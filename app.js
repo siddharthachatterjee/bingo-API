@@ -64,7 +64,10 @@ class Player {
         if (this.money > TICKET_COST && !games[this.game].started && passcode == this.game) {
             this.tickets.push(generateTicket());
             this.money -= TICKET_COST;
+            return "Ticket bought";
         }
+        return "Ticket not bought";
+        
     };
     callBingo() {
         // test full house
@@ -215,7 +218,7 @@ app.put("/chat/:key", (req, res) => {
 app.put("/buy/:key", (req, res) => {
     for (let i = 0; i < games[req.params.key].players.length; i++) {
         if (games[req.params.key].players[i].id === req.query.playerid) {
-            games[req.params.key].players[i].buyTicket(req.query.passcode);
+            res.send(games[req.params.key].players[i].buyTicket(req.query.passcode));
             break;
         }
     }
@@ -229,6 +232,6 @@ app.put("/call-bingo/:key", (req, res) => {
             break;
         }
     }
-    emitUpdate(this.key);
+    emitUpdate(req.params.key);
     
 })
