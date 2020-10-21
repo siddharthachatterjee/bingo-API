@@ -84,10 +84,11 @@ class Player {
         // test 5 in row
         this.tickets.forEach(ticket => {
             ticket.forEach(row => {
+            
                 if (row.every(square => !square || square.covered) && this.coveredRows.every(r => r.join(" ") !== row.join(" "))) {
                     let increase = Math.max(0, 5 - (games[this.game].fiveInRow));
                     this.money += increase;
-                    this.coveredRows.push(fullRow);
+                    this.coveredRows.push(row);
                     games[this.game].fiveInRow++;
                     socketIO.emit(`five-in-row-${this.game}`, {...this, increase});
                     type = "FIVE_IN_ROW";
