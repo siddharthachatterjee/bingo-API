@@ -60,8 +60,8 @@ class Player {
         this.name = name;
         this.game = game;
     }
-    buyTicket() {
-        if (this.money > TICKET_COST && !games[this.game].started) {
+    buyTicket(passcode) {
+        if (this.money > TICKET_COST && !games[this.game].started && passcode === this.game) {
             this.tickets.push(generateTicket());
             this.money -= TICKET_COST;
         }
@@ -215,7 +215,7 @@ app.put("/chat/:key", (req, res) => {
 app.put("/buy/:key", (req, res) => {
     for (let i = 0; i < games[req.params.key].players.length; i++) {
         if (games[req.params.key].players[i].id === req.query.playerid) {
-            games[req.params.key].players[i].buyTicket();
+            games[req.params.key].players[i].buyTicket(req.query.passcode);
             break;
         }
     }
