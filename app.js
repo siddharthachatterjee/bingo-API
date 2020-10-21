@@ -61,7 +61,7 @@ class Player {
         this.game = game;
     }
     buyTicket(passcode) {
-        if (this.money > TICKET_COST && !games[this.game].started && passcode === this.game) {
+        if (this.money > TICKET_COST && !games[this.game].started && passcode == this.game) {
             this.tickets.push(generateTicket());
             this.money -= TICKET_COST;
         }
