@@ -120,7 +120,7 @@ class Game {
     chat = [];
     timeTillNextCall = 0;
     lastNumberCalled = null;
-    constructor(host, hostid, enableAutoMark = true) {
+    constructor(host, hostid, enableAutoMark = false) {
         this.key = generateKey();
         this.host = host;
         this.hostid = hostid;
