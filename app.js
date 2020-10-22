@@ -23,7 +23,7 @@ const emitUpdate = room => socketIO.emit(`game${room}-updated`, games[room]);
     
 function generateTicket() {
     const ticket = Array(3).fill(null).map(() => Array(9).fill(null));
-    const availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
+    const availableNumbers = Array(89).fill(null).map((_, i) => i + 1);
     for (let i = 0; i < 3; ++i) {
         for (let j = 0; j < 5; ++j) {
             let randi;
@@ -113,7 +113,7 @@ class Game {
     players = [];
     started = false;
     ended = false;
-    enableAutoMark = true;
+    enableAutoMark = false;
     availableNumbers = Array(90).fill(null).map((_, i) => i + 1);
     host;
     hostid;
@@ -236,4 +236,14 @@ app.put("/call-bingo/:key", (req, res) => {
     }
     emitUpdate(req.params.key);
     
+});
+
+app.put("/mark/:key", (req, res) => {
+    for (let i = 0; i < games[req.params.key].players.length; i++) {
+        if (games[req.params.key].players[i].id === req.query.playerid) {
+            games[req.params.key].players[i].tickets[req.query.ticket][req.query.row][req.query.col].covered = true;
+            break;
+        }
+    }
+    emitUpdate(req.params.key)
 })

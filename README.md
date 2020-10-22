@@ -24,6 +24,8 @@ sends a chat message
 buys a ticket
 ### `put /call-bingo/:key?playerid=...`
 calls bingo, returns result of the call or blank if call was incorrect
+### `put /mark/:key?playerid=...ticket=...row=...col=...`
+marks a number off on a ticket if enable-auto-mark is false
 
 ## Socket.io:
 
