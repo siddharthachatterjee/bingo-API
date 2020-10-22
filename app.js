@@ -171,7 +171,7 @@ class Game {
                 ))
             })
         }
-       // emitUpdate(this.key);
+       emitUpdate(this.key);
     }
 }
 
