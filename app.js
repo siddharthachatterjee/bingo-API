@@ -212,7 +212,9 @@ app.put("/start/:key", (req, res) => {
 
 app.put("/chat/:key", (req, res) => {
     games[req.params.key].chat.push(req.query);
+
     emitUpdate(req.params.key);
+    res.send("Message sent!");
 });
 
 app.put("/buy/:key", (req, res) => {
