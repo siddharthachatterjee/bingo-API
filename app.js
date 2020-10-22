@@ -150,7 +150,7 @@ class Game {
                     emitUpdate(this.key);
                     delete games[this.key];
                 }
-            }, 5000)
+            }, 15000)
             
         }
     }
