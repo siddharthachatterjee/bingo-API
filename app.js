@@ -139,7 +139,8 @@ class Game {
             emitUpdate(this.key)
             let second = setInterval(() => {
                 this.timeTillNextCall--;
-                if (this.timeTillNextCall < 0) this.timeTillNextCall = 5;
+                if (this.timeTillNextCall < 0) this.timeTillNextCall = 15;
+                emitUpdate(this.key);
             }, 1000)
             let numberCall = setInterval(() => {
                 this.callNumber();
@@ -171,8 +172,9 @@ class Game {
                 ))
             })
         }
-       emitUpdate(this.key);
+        emitUpdate(this.key);
     }
+
 }
 
 
